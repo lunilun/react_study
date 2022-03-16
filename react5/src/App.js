@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
+import Movie from './components/movie';
 
 function App() {
-  const moives = [
+  const [movieTitle, setmoiveTitle] = useState('');
+  const [movieYear, setmoiveYear] = useState('');
+  const [movies, setmovies] = useState([
     { title: 'movie1', year: 2001},
     { title: 'movie2', year: 2002},
     { title: 'movie3', year: 2003},
@@ -11,19 +14,30 @@ function App() {
     { title: 'movie7', year: 2007},
     { title: 'movie8', year: 2008},
     { title: 'movie9', year: 2009},
-  ];
+  ]);
 
-  const renderMovies = moives.map(movie => {
+  const addMoive = (event) => {
+    event.preventDefault();
+    setmovies([...movies, { title: movieTitle, year: movieYear }]);
+    setmoiveTitle(''); setmoiveYear('');
+  };
+
+  const renderMovies = movies.map(movie => {
     return (
-      <div className='movie' key={movie.title}>
-        <div className='movie-title'>{movie.title}</div>
-        <div className='movie-year'>{movie.year}</div>
-    </div>
+      <Movie movie={movie} key={movie.title}/>
     );
   });
   return (
     <div className="App">
       <h1>Movie List</h1>
+
+      <form onSubmit={addMoive}>
+        <input type="text" value={movieTitle} placeholder='영화 제목' onChange={e => setmoiveTitle(e.target.value)} />
+        <br />
+        <input type="text" value={movieYear} placeholder='개봉년도' onChange={e => setmoiveYear(e.target.value)} />
+        <br />
+        <button type='submit'>추가</button>
+      </form>
       {renderMovies}
     </div>
   );
