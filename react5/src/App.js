@@ -19,7 +19,8 @@ function App() {
   const addMoive = (event) => {
     event.preventDefault();
     setmovies([...movies, { title: movieTitle, year: movieYear }]);
-    setmoiveTitle(''); setmoiveYear('');
+    setmoiveTitle('');
+    setmoiveYear('');
   };
 
   const renderMovies = movies.map(movie => {
