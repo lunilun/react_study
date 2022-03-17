@@ -1,46 +1,55 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import Movie from './components/movie';
+import MovieForm from './components/movieForm';
+
+import Navbar from './components/Navbar';
+import User from './Pages/Users.js';
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom';
 
 function App() {
-  const [movieTitle, setmoiveTitle] = useState('');
-  const [movieYear, setmoiveYear] = useState('');
-  const [movies, setmovies] = useState([
-    { title: 'movie1', year: 2001},
-    { title: 'movie2', year: 2002},
-    { title: 'movie3', year: 2003},
-    { title: 'movie4', year: 2004},
-    { title: 'movie5', year: 2005},
-    { title: 'movie6', year: 2006},
-    { title: 'movie7', year: 2007},
-    { title: 'movie8', year: 2008},
-    { title: 'movie9', year: 2009},
-  ]);
+  const [movies, setmovies] = useState([]);
 
-  const addMoive = (event) => {
-    event.preventDefault();
-    setmovies([...movies, { title: movieTitle, year: movieYear }]);
-    setmoiveTitle('');
-    setmoiveYear('');
+  const addMoive = (movie) => {
+    setmovies([...movies, movie]);
   };
 
-  const renderMovies = movies.map(movie => {
-    return (
-      <Movie movie={movie} key={movie.title}/>
-    );
-  });
-  return (
-    <div className="App">
-      <h1>Movie List</h1>
+  const removemovie = (id) => {
+    setmovies(movies.filter(movie => {return movie.id !== id }));
+  };
 
-      <form onSubmit={addMoive}>
-        <input type="text" value={movieTitle} placeholder='영화 제목' onChange={e => setmoiveTitle(e.target.value)} />
-        <br />
-        <input type="text" value={movieYear} placeholder='개봉년도' onChange={e => setmoiveYear(e.target.value)} />
-        <br />
-        <button type='submit'>추가</button>
-      </form>
-      {renderMovies}
-    </div>
+  const renderMovies = movies.length ? movies.map(movie => {
+    return (
+      <Movie movie={movie} removemovie={removemovie} key={movie.id}/>
+    );
+  }) : '추가된 영화가 없습니다.';
+  return (
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Switch>
+
+          <Route path="/movies">
+            <h1>Movie List</h1>
+            <MovieForm addMoive={addMoive}/>
+            {renderMovies}
+          </Route>
+
+          <Route path="/users">
+            <User/>
+          </Route>
+
+          <Route path="/" exact>
+            <h1>Home</h1>
+          </Route>
+          
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
